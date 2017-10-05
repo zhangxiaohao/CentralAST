@@ -1,0 +1,30 @@
+var socket;
+var userNumber;
+var userName;
+var Ast;
+
+$(document).ready(function() {
+	var name = prompt('ÇëÊäÈëÄúµÄÃû×Ö', '');
+	if(name == null || name == '') name = 'user';
+	Ast = new ast();
+	socket = io.connect(name);
+	
+	socket.on('nameResult', function(result) {
+		var nameList = result.nameList;
+		userNumber = result.userNumber;
+		userName = name;
+		Ast.setDocument(result.doc);
+		console.log(userList);
+	});
+
+	socket.on('addUser', function(result) {
+		console.log(result.userName);
+	});
+	
+	socket.on('message', function(message) {
+		var operation = message.operation;
+		var timestamp = message.timestamp;
+		console.log(message);
+	});
+	
+});
