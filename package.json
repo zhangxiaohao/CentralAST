@@ -1,0 +1,16 @@
+{
+	"name":"CentralAST",
+	"version":"0.0.1",
+	"description":"Collaborative editing system by jianhzhang",
+	"main":"server.js",
+	"dependencies": {
+		"socket.io":"~0.9.6",
+		"mime":"~1.2.7",
+		"grunt":"~1.0.1",
+		"grunt-contrib-uglify":"~3.1.0",
+		"grunt-contrib-concat":"~1.0.1",
+		"grunt-contrib-jshint":"~1.1.0",
+		"grunt-contrib-watch":"~1.0.0",
+		"bootstrap":"~3.7.3"
+	}
+}
