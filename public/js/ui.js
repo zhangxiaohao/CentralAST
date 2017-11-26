@@ -1,23 +1,7 @@
 var userNumber;
 var userName;
-var Ast;
 var socket = io.connect();
 var oldText = "";
-var Queue = [];
-
-function getVal() {
-	$('textarea').val(Ast.str);
-	oldText = Ast.str;
-}
-
-function localOperation(op) {
-	var Operation = new operation(op.type, op.pos, op.ch, Ast.timestamp);
-	Operation.timestamp.ts[(Operation.timestamp.siteNumber)] ++;
-	$('textarea').attr('disabled', true);
-	Ast.execute(Operation);
-	$('textarea').attr('disabled', false);
-	socket.emit('message', Operation);
-}
 
 function getOperation() {
 	var newText = $("textarea").val();
@@ -76,65 +60,18 @@ function getOperation() {
 	delList.sort(function(a, b) {return b.pos - a.pos;});
 	insList.sort(function(a, b) {return a.pos - b.pos;});
 	for(var i=0; i<delList.length; i++) {
-		localOperation(delList[i]);
+		//localOperation(delList[i]);
 	}
 	for(var i=0; i<insList.length; i++) {
-		localOperation(insList[i]);
+		//localOperation(insList[i]);
 	}
-	oldText = newText;
 	console.log(delList);
 	console.log(insList);
 	console.log(oldText + " " + newText);
-}
-
-function executeRemoteOperation() {
-	var num = Queue.length;
-	while(num --) {
-		var op = Queue.pop();
-		if(Ast.causalReady(op) == false) Queue.unshift(op);
-		else {
-			var s = $('textarea').get(0).selectionStart;
-			var e = $('textarea').get(0).selectionEnd;
-			$('textarea').attr('disabled', true);
-			Ast.execute(op);
-			getVal();
-			if(op.type == 'del' && op.position <= s) s--;
-			if(op.type == 'del' && op.position <= e) e--;
-			if(op.type == 'ins' && op.position <= s) s++;
-			if(op.type == 'ins' && op.position <= e) e++;
-			$('textarea').attr('disabled', false).focus();
-			$('textarea').get(0).selectionStart = s;
-			$('textarea').get(0).selectionEnd = e;
-			console.log(s + " " + e);
-		}
-	}
+	oldText = newText;
 }
 
 $(document).ready(function() {
-	$('textarea').attr('disabled', true);
-
-	socket.on('nameResult', function(result) {
-		userNumber = result.guestNumber;
-		Ast = new ast(userNumber);
-		console.log(userNumber);
-		socket.emit('getOperationList');
-	});
-
-	socket.on('addUser', function(result) {
-		console.log(result.userName);
-	});
-
-	socket.on('message', function(Operation) {
-		var ts = new timestamp(parseInt(Operation.timestamp.siteNumber));
-		ts.ts = Operation.timestamp.ts;
-		var op = new operation(Operation.type, Operation.position, Operation.character, ts);
-		console.log(op);
-		Queue.unshift(op);
-	});
-
-	setTimeout(function() {
-		$('textarea').attr('disabled', false);
-	}, 2000);
+	$('textarea').css('height', screen.height - 200);
 	setInterval(getOperation, 10);
-	setInterval(executeRemoteOperation, 10);
 });

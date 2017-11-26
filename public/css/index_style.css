@@ -90,7 +90,7 @@ ul{
 }
 #input{
 	width:100%;
-	height:800px;
+	height:100%;
 	float:center;
 	background-color:#fefefe;
 	resize:none;
@@ -98,6 +98,7 @@ ul{
 }
 .body {
 	padding-top:60px;
+	height:100%;
 }
 
 .center {
